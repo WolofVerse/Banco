@@ -3,28 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bank - Premium Dark</title>
+    <title>Bank - Premium Dark Scrollable</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
     <style>
         /* --- VARIABLES ESTILO DARK --- */
         :root {
-            --bg-body: #050505;       /* Fondo casi negro */
-            --bg-app: #121214;        /* Fondo de la app */
-            --bg-card: #1E1E22;       /* Fondo de elementos/tarjetas */
-            
-            --primary: #6366f1;       /* Indigo brillante */
+            --bg-body: #050505;
+            --bg-app: #121214;
+            --bg-card: #1E1E22;
+            --primary: #6366f1;
             --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-            
             --text-main: #FFFFFF;
             --text-muted: #9ca3af;
-            
-            --success: #34d399;       /* Verde neón para ingresos */
-            --danger: #f87171;        /* Rojo suave */
-            
+            --success: #34d399;
+            --danger: #f87171;
             --radius-card: 24px;
-            --radius-btn: 16px;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
@@ -35,20 +30,26 @@
             justify-content: center;
             min-height: 100vh;
             color: var(--text-main);
+            overflow: hidden; /* Evita doble scroll en desktop */
         }
 
         .app-container {
             background-color: var(--bg-app);
             width: 100%;
             max-width: 420px;
-            min-height: 100vh;
+            height: 100vh; /* Altura fija para simular app nativa */
             position: relative;
-            box-shadow: 0 0 50px rgba(255, 255, 255, 0.05); /* Resplandor sutil */
-            padding-bottom: 90px;
-            overflow-x: hidden;
+            box-shadow: 0 0 50px rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
         }
 
-        /* --- HEADER --- */
+        /* --- HEADER & BALANCE --- */
+        .top-section {
+            flex-shrink: 0; /* No encoger esta sección */
+            padding-bottom: 1rem;
+        }
+
         header {
             padding: 2.5rem 1.5rem 1rem;
             display: flex;
@@ -57,146 +58,89 @@
         }
 
         .profile-section { display: flex; gap: 12px; align-items: center; }
-        
         .avatar {
             width: 44px; height: 44px;
             border-radius: 50%;
             background: var(--bg-card);
             border: 2px solid var(--primary);
-            display: grid; place-items: center;
-            font-weight: 700; font-size: 0.9rem;
-            background-image: url('https://i.pravatar.cc/150?img=11'); /* Avatar de ejemplo */
+            background-image: url('https://i.pravatar.cc/150?img=11');
             background-size: cover;
         }
-
         .welcome-text span { display: block; font-size: 0.8rem; color: var(--text-muted); }
         .welcome-text h3 { font-size: 1rem; font-weight: 600; }
-
         .settings-btn {
-            background: var(--bg-card);
-            border: none;
-            width: 40px; height: 40px;
-            border-radius: 12px;
-            color: var(--text-main);
-            cursor: pointer;
-            display: grid; place-items: center;
+            background: var(--bg-card); border: none; width: 40px; height: 40px;
+            border-radius: 12px; color: var(--text-main); cursor: pointer; display: grid; place-items: center;
         }
 
-        /* --- TOTAL BALANCE (Minimalista) --- */
-        .balance-container {
-            padding: 1rem 1.5rem;
-            text-align: center;
-            margin-bottom: 1rem;
-        }
-
+        .balance-container { padding: 0 1.5rem 1rem; text-align: center; }
         .balance-label { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 5px; }
-        
         .total-amount {
-            font-size: 2.5rem;
-            font-weight: 700;
-            letter-spacing: -1px;
+            font-size: 2.2rem; font-weight: 700; letter-spacing: -1px;
             background: linear-gradient(to right, #fff, #a5b4fc);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
-        /* --- TARJETA VIRTUAL (Glassmorphism) --- */
-        .card-slider {
-            padding: 0 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .credit-card {
-            background: var(--primary-gradient);
-            padding: 1.5rem;
-            border-radius: var(--radius-card);
-            height: 200px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 15px 35px -5px rgba(99, 102, 241, 0.4);
-        }
-
-        /* Efecto de vidrio/ruido */
-        .credit-card::after {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(circle at top right, rgba(255,255,255,0.2), transparent);
-            pointer-events: none;
-        }
-
-        .card-top { display: flex; justify-content: space-between; align-items: start; z-index: 2; }
-        .chip { width: 40px; height: 30px; background: rgba(255,255,255,0.2); border-radius: 6px; border: 1px solid rgba(255,255,255,0.3); }
-        .contactless { font-size: 1.5rem; opacity: 0.8; }
-
-        .card-details { z-index: 2; }
-        .card-number { font-family: monospace; font-size: 1.1rem; letter-spacing: 2px; margin-bottom: 10px; opacity: 0.9; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-        .card-holder { display: flex; justify-content: space-between; font-size: 0.75rem; opacity: 0.8; text-transform: uppercase; }
-
-        /* --- BOTONES DE ACCIÓN (Círculos) --- */
         .actions-grid {
-            display: flex;
-            justify-content: space-around;
-            padding: 0 1rem;
-            margin-bottom: 2rem;
+            display: flex; justify-content: space-around; padding: 0 1rem; margin-bottom: 1.5rem;
         }
-
         .action-item {
             display: flex; flex-direction: column; align-items: center; gap: 8px;
             background: none; border: none; cursor: pointer;
         }
-
         .circle-icon {
-            width: 60px; height: 60px;
-            background: var(--bg-card);
-            border-radius: 50%;
-            display: grid; place-items: center;
-            color: var(--text-main);
-            font-size: 1.5rem;
-            transition: all 0.2s ease;
-            border: 1px solid rgba(255,255,255,0.05);
+            width: 50px; height: 50px; background: var(--bg-card); border-radius: 50%;
+            display: grid; place-items: center; color: var(--text-main); font-size: 1.3rem;
+            border: 1px solid rgba(255,255,255,0.05); transition: 0.2s;
         }
+        .action-item:hover .circle-icon { background: #27272a; border-color: var(--primary); }
+        .action-label { font-size: 0.7rem; color: var(--text-muted); }
 
-        .action-item:hover .circle-icon { background: #27272a; transform: translateY(-3px); border-color: var(--primary); }
-        .action-label { font-size: 0.75rem; color: var(--text-muted); }
-
-        /* --- MOVIMIENTOS --- */
+        /* --- MOVIMIENTOS (SCROLLABLE AREA) --- */
         .transactions-sheet {
             background: var(--bg-card);
             border-top-left-radius: 30px;
             border-top-right-radius: 30px;
-            padding: 1.5rem;
-            min-height: 400px;
+            padding: 1.5rem 1.5rem 80px 1.5rem; /* Padding bottom extra para el nav */
+            flex-grow: 1; /* Ocupa el espacio restante */
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Contiene el scroll interno */
         }
 
         .sheet-header {
-            display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 1rem; flex-shrink: 0;
         }
         .sheet-title { font-size: 1.1rem; font-weight: 600; }
-        .search-icon { color: var(--text-muted); font-size: 1.2rem; }
+
+        /* Contenedor scrolleable de la lista */
+        .transactions-list {
+            overflow-y: auto;
+            padding-right: 5px; /* Espacio para scrollbar si aparece */
+            /* Ocultar scrollbar pero permitir scroll */
+            scrollbar-width: thin;
+            scrollbar-color: #333 transparent;
+        }
+        
+        .transactions-list::-webkit-scrollbar { width: 4px; }
+        .transactions-list::-webkit-scrollbar-thumb { background-color: #444; border-radius: 4px; }
 
         .t-row {
             display: flex; justify-content: space-between; align-items: center;
             margin-bottom: 1.5rem;
         }
-
         .t-info { display: flex; gap: 15px; align-items: center; }
-        
         .t-img {
-            width: 48px; height: 48px;
-            border-radius: 14px;
-            background: #2D2D35;
-            display: grid; place-items: center;
-            font-size: 1.2rem;
+            width: 44px; height: 44px; border-radius: 14px;
+            background: #2D2D35; display: grid; place-items: center; font-size: 1.2rem; flex-shrink: 0;
         }
-        
         .t-img.income { color: var(--success); background: rgba(52, 211, 153, 0.1); }
         .t-img.expense { color: var(--text-main); background: rgba(255, 255, 255, 0.1); }
-
-        .t-desc h4 { font-size: 0.95rem; margin-bottom: 4px; font-weight: 500; }
+        
+        .t-desc h4 { font-size: 0.9rem; margin-bottom: 3px; font-weight: 500; color: #fff;}
         .t-desc p { font-size: 0.75rem; color: var(--text-muted); }
-
+        
         .t-value { text-align: right; }
         .amount { font-weight: 600; font-size: 0.95rem; display: block; }
         .amount.plus { color: var(--success); }
@@ -206,14 +150,14 @@
         /* --- NAVBAR --- */
         .navbar {
             position: absolute; bottom: 20px; left: 20px; right: 20px;
-            background: rgba(30, 30, 34, 0.9);
-            backdrop-filter: blur(10px);
-            padding: 15px 25px;
-            border-radius: 25px;
+            background: rgba(30, 30, 34, 0.85);
+            backdrop-filter: blur(12px);
+            padding: 15px 25px; border-radius: 25px;
             display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            z-index: 10;
+            border: 1px solid rgba(255,255,255,0.05);
         }
-
         .nav-link { font-size: 1.5rem; color: #52525b; transition: 0.3s; position: relative; }
         .nav-link.active { color: var(--primary); }
         .nav-link.active::after {
@@ -227,129 +171,264 @@
 
     <div class="app-container">
         
-        <header>
-            <div class="profile-section">
-                <div class="avatar"></div>
-                <div class="welcome-text">
-                    <span>Hola,</span>
-                    <h3>Andrei</h3>
-                </div>
-            </div>
-            <button class="settings-btn">
-                <i class="ph ph-gear"></i>
-            </button>
-        </header>
-
-        <div class="balance-container">
-            <p class="balance-label">Patrimonio Total</p>
-            <h1 class="total-amount">245.457,28 €</h1>
-        </div>
-
-        <section class="card-slider">
-            <div class="credit-card">
-                <div class="card-top">
-                    <div class="chip"></div>
-                    <i class="ph ph-contactless-payment contactless"></i>
-                </div>
-                <div class="card-details">
-                    <div class="card-number">•••• •••• •••• 8842</div>
-                    <div class="card-holder">
-                        <span>Andrei Alexandru</span>
-                        <span>09/28</span>
+        <div class="top-section">
+            <header>
+                <div class="profile-section">
+                    <div class="avatar"></div>
+                    <div class="welcome-text">
+                        <span>Buenas noches,</span>
+                        <h3>Carlos R.</h3>
                     </div>
                 </div>
-            </div>
-        </section>
+                <button class="settings-btn"><i class="ph ph-gear"></i></button>
+            </header>
 
-        <section class="actions-grid">
-            <button class="action-item">
-                <div class="circle-icon"><i class="ph ph-arrow-up-right"></i></div>
-                <span class="action-label">Enviar</span>
-            </button>
-            <button class="action-item">
-                <div class="circle-icon"><i class="ph ph-plus"></i></div>
-                <span class="action-label">Ingresar</span>
-            </button>
-            <button class="action-item">
-                <div class="circle-icon"><i class="ph ph-receipt"></i></div>
-                <span class="action-label">Facturas</span>
-            </button>
-            <button class="action-item">
-                <div class="circle-icon"><i class="ph ph-dots-three"></i></div>
-                <span class="action-label">Otro</span>
-            </button>
-        </section>
+            <div class="balance-container">
+                <p class="balance-label">Patrimonio Total</p>
+                <h1 class="total-amount">245.457,28 €</h1>
+            </div>
+
+            <section class="actions-grid">
+                <button class="action-item">
+                    <div class="circle-icon"><i class="ph ph-arrow-up-right"></i></div>
+                    <span class="action-label">Enviar</span>
+                </button>
+                <button class="action-item">
+                    <div class="circle-icon"><i class="ph ph-plus"></i></div>
+                    <span class="action-label">Ingresar</span>
+                </button>
+                <button class="action-item">
+                    <div class="circle-icon"><i class="ph ph-credit-card"></i></div>
+                    <span class="action-label">Tarjetas</span>
+                </button>
+                <button class="action-item">
+                    <div class="circle-icon"><i class="ph ph-dots-three"></i></div>
+                    <span class="action-label">Más</span>
+                </button>
+            </section>
+        </div>
 
         <section class="transactions-sheet">
             <div class="sheet-header">
                 <h3 class="sheet-title">Actividad Reciente</h3>
-                <i class="ph ph-magnifying-glass search-icon"></i>
+                <i class="ph ph-magnifying-glass" style="color:var(--text-muted)"></i>
             </div>
 
-            <div class="t-row">
-                <div class="t-info">
-                    <div class="t-img income">
-                        <i class="ph ph-briefcase"></i>
+            <div class="transactions-list">
+                
+                <div class="t-row">
+                    <div class="t-info">
+                        <div class="t-img income"><i class="ph ph-briefcase"></i></div>
+                        <div class="t-desc">
+                            <h4>Ingresos Wolof INC</h4>
+                            <p>Factura #F-2023-09</p>
+                        </div>
                     </div>
-                    <div class="t-desc">
-                        <h4>Ingresos Wolof INC</h4>
-                        <p>Factura #F-2023-09</p>
+                    <div class="t-value">
+                        <span class="amount plus">+ 24.943,00 €</span>
+                        <span class="date">Hoy, 10:42</span>
                     </div>
                 </div>
-                <div class="t-value">
-                    <span class="amount plus">+ 24.943,00 €</span>
-                    <span class="date">Hoy, 10:42</span>
-                </div>
-            </div>
 
-            <div class="t-row">
-                <div class="t-info">
-                    <div class="t-img income">
-                        <i class="ph ph-chart-line-up"></i>
+                <div class="t-row">
+                    <div class="t-info">
+                        <div class="t-img income"><i class="ph ph-chart-line-up"></i></div>
+                        <div class="t-desc">
+                            <h4>Rendimientos Inv.</h4>
+                            <p>Cartera Tecnológica</p>
+                        </div>
                     </div>
-                    <div class="t-desc">
-                        <h4>Rendimientos Inv.</h4>
-                        <p>Cartera Tecnológica</p>
+                    <div class="t-value">
+                        <span class="amount plus">+ 18.284,00 €</span>
+                        <span class="date">Ayer, 16:15</span>
                     </div>
                 </div>
-                <div class="t-value">
-                    <span class="amount plus">+ 18.284,00 €</span>
-                    <span class="date">Ayer, 16:15</span>
-                </div>
-            </div>
 
-            <div class="t-row">
-                <div class="t-info">
-                    <div class="t-img expense">
-                        <i class="ph ph-airplane-tilt"></i>
+                <div class="t-row">
+                    <div class="t-info">
+                        <div class="t-img expense"><i class="ph ph-airplane-tilt"></i></div>
+                        <div class="t-desc">
+                            <h4>Iberia Airlines</h4>
+                            <p>Vuelos Business</p>
+                        </div>
                     </div>
-                    <div class="t-desc">
-                        <h4>Iberia Airlines</h4>
-                        <p>Vuelos Business</p>
+                    <div class="t-value">
+                        <span class="amount minus">- 1.250,50 €</span>
+                        <span class="date">28 Feb</span>
                     </div>
                 </div>
-                <div class="t-value">
-                    <span class="amount minus">- 1.250,50 €</span>
-                    <span class="date">28 Feb</span>
-                </div>
-            </div>
 
-             <div class="t-row">
-                <div class="t-info">
-                    <div class="t-img expense">
-                        <i class="ph ph-fork-knife"></i>
+                <div class="t-row">
+                    <div class="t-info">
+                        <div class="t-img income"><i class="ph ph-house-line"></i></div>
+                        <div class="t-desc">
+                            <h4>Alquiler Piso Centro</h4>
+                            <p>Mensualidad Marzo</p>
+                        </div>
                     </div>
-                    <div class="t-desc">
-                        <h4>El Celler de Can Rocaa</h4>
-                        <p>Restauración</p>
+                    <div class="t-value">
+                        <span class="amount plus">+ 1.500,00 €</span>
+                        <span class="date">28 Feb</span>
                     </div>
                 </div>
-                <div class="t-value">
-                    <span class="amount minus">- 480,00 €</span>
-                    <span class="date">26 Feb</span>
-                </div>
-            </div>
 
+                 <div class="t-row">
+                    <div class="t-info">
+                        <div class="t-img expense"><i class="ph ph-fork-knife"></i></div>
+                        <div class="t-desc">
+                            <h4>El Celler de Can Roca</h4>
+                            <p>Restauración</p>
+                        </div>
+                    </div>
+                    <div class="t-value">
+                        <span class="amount minus">- 480,00 €</span>
+                        <span class="date">26 Feb</span>
+                    </div>
+                </div>
+
+                <div class="t-row">
+                    <div class="t-info">
+                        <div class="t-img income"><i class="ph ph-currency-btc"></i></div>
+                        <div class="t-desc">
+                            <h4>Venta Cripto</h4>
+                            <p>Binance Withdrawal</p>
+                        </div>
+                    </div>
+                    <div class="t-value">
+                        <span class="amount plus">+ 3.240,50 €</span>
+                        <span class="date">25 Feb</span>
+                    </div>
+                </div>
+
+                <div class="t-row">
+                    <div class="t-info">
+                        <div class="t-img income"><i class="ph ph-buildings"></i></div>
+                        <div class="t-desc">
+                            <h4>Devolución Hacienda</h4>
+                            <p>Ejercicio 2024</p>
+                        </div>
+                    </div>
+                    <div class="t-value">
+                        <span class="amount plus">+ 4.120,00 €</span>
+                        <span class="date">24 Feb</span>
+                    </div>
+                </div>
+
+                 <div class="t-row">
+                    <div class="t-info">
+                        <div class="t-img expense"><i class="ph ph-apple-logo"></i></div>
+                        <div class="t-desc">
+                            <h4>Apple Store</h4>
+                            <p>MacBook Pro M3</p>
+                        </div>
+                    </div>
+                    <div class="t-value">
+                        <span class="amount minus">- 3.459,00 €</span>
+                        <span class="date">23 Feb</span>
+                    </div>
+                </div>
+
+                <div class="t-row">
+                    <div class="t-info">
+                        <div class="t-img income"><i class="ph ph-hand-coins"></i></div>
+                        <div class="t-desc">
+                            <h4>Bonus Anual</h4>
+                            <p>Objetivos Q4</p>
+                        </div>
+                    </div>
+                    <div class="t-value">
+                        <span class="amount plus">+ 8.000,00 €</span>
+                        <span class="date">22 Feb</span>
+                    </div>
+                </div>
+
+                <div class="t-row">
+                    <div class="t-info">
+                        <div class="t-img income"><i class="ph ph-users"></i></div>
+                        <div class="t-desc">
+                            <h4>Bizum: Laura M.</h4>
+                            <p>Cena Viernes</p>
+                        </div>
+                    </div>
+                    <div class="t-value">
+                        <span class="amount plus">+ 45,00 €</span>
+                        <span class="date">21 Feb</span>
+                    </div>
+                </div>
+
+                <div class="t-row">
+                    <div class="t-info">
+                        <div class="t-img expense"><i class="ph ph-gas-pump"></i></div>
+                        <div class="t-desc">
+                            <h4>Repsol E.S.</h4>
+                            <p>Combustible</p>
+                        </div>
+                    </div>
+                    <div class="t-value">
+                        <span class="amount minus">- 85,40 €</span>
+                        <span class="date">20 Feb</span>
+                    </div>
+                </div>
+
+                <div class="t-row">
+                    <div class="t-info">
+                        <div class="t-img income"><i class="ph ph-strategy"></i></div>
+                        <div class="t-desc">
+                            <h4>Consultoría Estrategia</h4>
+                            <p>Proyecto Beta</p>
+                        </div>
+                    </div>
+                    <div class="t-value">
+                        <span class="amount plus">+ 2.850,00 €</span>
+                        <span class="date">19 Feb</span>
+                    </div>
+                </div>
+
+                <div class="t-row">
+                    <div class="t-info">
+                        <div class="t-img income"><i class="ph ph-bank"></i></div>
+                        <div class="t-desc">
+                            <h4>Intereses Cta Ahorro</h4>
+                            <p>Liquidación mensual</p>
+                        </div>
+                    </div>
+                    <div class="t-value">
+                        <span class="amount plus">+ 124,30 €</span>
+                        <span class="date">18 Feb</span>
+                    </div>
+                </div>
+
+                <div class="t-row">
+                    <div class="t-info">
+                        <div class="t-img income"><i class="ph ph-shopping-bag"></i></div>
+                        <div class="t-desc">
+                            <h4>Venta Vinted</h4>
+                            <p>Saldo transferido</p>
+                        </div>
+                    </div>
+                    <div class="t-value">
+                        <span class="amount plus">+ 85,00 €</span>
+                        <span class="date">15 Feb</span>
+                    </div>
+                </div>
+                
+                 <div class="t-row">
+                    <div class="t-info">
+                        <div class="t-img income"><i class="ph ph-presentation-chart"></i></div>
+                        <div class="t-desc">
+                            <h4>Dividendos Coca-Cola</h4>
+                            <p>Renta Variable</p>
+                        </div>
+                    </div>
+                    <div class="t-value">
+                        <span class="amount plus">+ 192,50 €</span>
+                        <span class="date">14 Feb</span>
+                    </div>
+                </div>
+
+                 <div style="height: 20px;"></div>
+
+            </div>
         </section>
 
         <nav class="navbar">
@@ -362,6 +441,4 @@
     </div>
 
 </body>
-
 </html>
-
