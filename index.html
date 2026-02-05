@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank - Premium Dark</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        /* --- VARIABLES ESTILO DARK --- */
+        :root {
+            --bg-body: #050505;       /* Fondo casi negro */
+            --bg-app: #121214;        /* Fondo de la app */
+            --bg-card: #1E1E22;       /* Fondo de elementos/tarjetas */
+            
+            --primary: #6366f1;       /* Indigo brillante */
+            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            
+            --text-main: #FFFFFF;
+            --text-muted: #9ca3af;
+            
+            --success: #34d399;       /* Verde neón para ingresos */
+            --danger: #f87171;        /* Rojo suave */
+            
+            --radius-card: 24px;
+            --radius-btn: 16px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        body {
+            background-color: var(--bg-body);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            color: var(--text-main);
+        }
+
+        .app-container {
+            background-color: var(--bg-app);
+            width: 100%;
+            max-width: 420px;
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 50px rgba(255, 255, 255, 0.05); /* Resplandor sutil */
+            padding-bottom: 90px;
+            overflow-x: hidden;
+        }
+
+        /* --- HEADER --- */
+        header {
+            padding: 2.5rem 1.5rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .profile-section { display: flex; gap: 12px; align-items: center; }
+        
+        .avatar {
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 2px solid var(--primary);
+            display: grid; place-items: center;
+            font-weight: 700; font-size: 0.9rem;
+            background-image: url('https://i.pravatar.cc/150?img=11'); /* Avatar de ejemplo */
+            background-size: cover;
+        }
+
+        .welcome-text span { display: block; font-size: 0.8rem; color: var(--text-muted); }
+        .welcome-text h3 { font-size: 1rem; font-weight: 600; }
+
+        .settings-btn {
+            background: var(--bg-card);
+            border: none;
+            width: 40px; height: 40px;
+            border-radius: 12px;
+            color: var(--text-main);
+            cursor: pointer;
+            display: grid; place-items: center;
+        }
+
+        /* --- TOTAL BALANCE (Minimalista) --- */
+        .balance-container {
+            padding: 1rem 1.5rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .balance-label { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 5px; }
+        
+        .total-amount {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            background: linear-gradient(to right, #fff, #a5b4fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* --- TARJETA VIRTUAL (Glassmorphism) --- */
+        .card-slider {
+            padding: 0 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .credit-card {
+            background: var(--primary-gradient);
+            padding: 1.5rem;
+            border-radius: var(--radius-card);
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 35px -5px rgba(99, 102, 241, 0.4);
+        }
+
+        /* Efecto de vidrio/ruido */
+        .credit-card::after {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at top right, rgba(255,255,255,0.2), transparent);
+            pointer-events: none;
+        }
+
+        .card-top { display: flex; justify-content: space-between; align-items: start; z-index: 2; }
+        .chip { width: 40px; height: 30px; background: rgba(255,255,255,0.2); border-radius: 6px; border: 1px solid rgba(255,255,255,0.3); }
+        .contactless { font-size: 1.5rem; opacity: 0.8; }
+
+        .card-details { z-index: 2; }
+        .card-number { font-family: monospace; font-size: 1.1rem; letter-spacing: 2px; margin-bottom: 10px; opacity: 0.9; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .card-holder { display: flex; justify-content: space-between; font-size: 0.75rem; opacity: 0.8; text-transform: uppercase; }
+
+        /* --- BOTONES DE ACCIÓN (Círculos) --- */
+        .actions-grid {
+            display: flex;
+            justify-content: space-around;
+            padding: 0 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .action-item {
+            display: flex; flex-direction: column; align-items: center; gap: 8px;
+            background: none; border: none; cursor: pointer;
+        }
+
+        .circle-icon {
+            width: 60px; height: 60px;
+            background: var(--bg-card);
+            border-radius: 50%;
+            display: grid; place-items: center;
+            color: var(--text-main);
+            font-size: 1.5rem;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .action-item:hover .circle-icon { background: #27272a; transform: translateY(-3px); border-color: var(--primary); }
+        .action-label { font-size: 0.75rem; color: var(--text-muted); }
+
+        /* --- MOVIMIENTOS --- */
+        .transactions-sheet {
+            background: var(--bg-card);
+            border-top-left-radius: 30px;
+            border-top-right-radius: 30px;
+            padding: 1.5rem;
+            min-height: 400px;
+        }
+
+        .sheet-header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;
+        }
+        .sheet-title { font-size: 1.1rem; font-weight: 600; }
+        .search-icon { color: var(--text-muted); font-size: 1.2rem; }
+
+        .t-row {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .t-info { display: flex; gap: 15px; align-items: center; }
+        
+        .t-img {
+            width: 48px; height: 48px;
+            border-radius: 14px;
+            background: #2D2D35;
+            display: grid; place-items: center;
+            font-size: 1.2rem;
+        }
+        
+        .t-img.income { color: var(--success); background: rgba(52, 211, 153, 0.1); }
+        .t-img.expense { color: var(--text-main); background: rgba(255, 255, 255, 0.1); }
+
+        .t-desc h4 { font-size: 0.95rem; margin-bottom: 4px; font-weight: 500; }
+        .t-desc p { font-size: 0.75rem; color: var(--text-muted); }
+
+        .t-value { text-align: right; }
+        .amount { font-weight: 600; font-size: 0.95rem; display: block; }
+        .amount.plus { color: var(--success); }
+        .amount.minus { color: var(--text-main); }
+        .date { font-size: 0.7rem; color: var(--text-muted); margin-top: 4px; }
+
+        /* --- NAVBAR --- */
+        .navbar {
+            position: absolute; bottom: 20px; left: 20px; right: 20px;
+            background: rgba(30, 30, 34, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 15px 25px;
+            border-radius: 25px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .nav-link { font-size: 1.5rem; color: #52525b; transition: 0.3s; position: relative; }
+        .nav-link.active { color: var(--primary); }
+        .nav-link.active::after {
+            content: ''; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%);
+            width: 4px; height: 4px; background: var(--primary); border-radius: 50%;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <header>
+            <div class="profile-section">
+                <div class="avatar"></div>
+                <div class="welcome-text">
+                    <span>Hola,</span>
+                    <h3>Andrei</h3>
+                </div>
+            </div>
+            <button class="settings-btn">
+                <i class="ph ph-gear"></i>
+            </button>
+        </header>
+
+        <div class="balance-container">
+            <p class="balance-label">Patrimonio Total</p>
+            <h1 class="total-amount">245.457,28 €</h1>
+        </div>
+
+        <section class="card-slider">
+            <div class="credit-card">
+                <div class="card-top">
+                    <div class="chip"></div>
+                    <i class="ph ph-contactless-payment contactless"></i>
+                </div>
+                <div class="card-details">
+                    <div class="card-number">•••• •••• •••• 8842</div>
+                    <div class="card-holder">
+                        <span>Andrei Alexandru</span>
+                        <span>09/28</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="actions-grid">
+            <button class="action-item">
+                <div class="circle-icon"><i class="ph ph-arrow-up-right"></i></div>
+                <span class="action-label">Enviar</span>
+            </button>
+            <button class="action-item">
+                <div class="circle-icon"><i class="ph ph-plus"></i></div>
+                <span class="action-label">Ingresar</span>
+            </button>
+            <button class="action-item">
+                <div class="circle-icon"><i class="ph ph-receipt"></i></div>
+                <span class="action-label">Facturas</span>
+            </button>
+            <button class="action-item">
+                <div class="circle-icon"><i class="ph ph-dots-three"></i></div>
+                <span class="action-label">Otro</span>
+            </button>
+        </section>
+
+        <section class="transactions-sheet">
+            <div class="sheet-header">
+                <h3 class="sheet-title">Actividad Reciente</h3>
+                <i class="ph ph-magnifying-glass search-icon"></i>
+            </div>
+
+            <div class="t-row">
+                <div class="t-info">
+                    <div class="t-img income">
+                        <i class="ph ph-briefcase"></i>
+                    </div>
+                    <div class="t-desc">
+                        <h4>Ingresos Wolof INC</h4>
+                        <p>Factura #F-2023-09</p>
+                    </div>
+                </div>
+                <div class="t-value">
+                    <span class="amount plus">+ 24.943,00 €</span>
+                    <span class="date">Hoy, 10:42</span>
+                </div>
+            </div>
+
+            <div class="t-row">
+                <div class="t-info">
+                    <div class="t-img income">
+                        <i class="ph ph-chart-line-up"></i>
+                    </div>
+                    <div class="t-desc">
+                        <h4>Rendimientos Inv.</h4>
+                        <p>Cartera Tecnológica</p>
+                    </div>
+                </div>
+                <div class="t-value">
+                    <span class="amount plus">+ 18.284,00 €</span>
+                    <span class="date">Ayer, 16:15</span>
+                </div>
+            </div>
+
+            <div class="t-row">
+                <div class="t-info">
+                    <div class="t-img expense">
+                        <i class="ph ph-airplane-tilt"></i>
+                    </div>
+                    <div class="t-desc">
+                        <h4>Iberia Airlines</h4>
+                        <p>Vuelos Business</p>
+                    </div>
+                </div>
+                <div class="t-value">
+                    <span class="amount minus">- 1.250,50 €</span>
+                    <span class="date">28 Feb</span>
+                </div>
+            </div>
+
+             <div class="t-row">
+                <div class="t-info">
+                    <div class="t-img expense">
+                        <i class="ph ph-fork-knife"></i>
+                    </div>
+                    <div class="t-desc">
+                        <h4>El Celler de Can Roca</h4>
+                        <p>Restauración</p>
+                    </div>
+                </div>
+                <div class="t-value">
+                    <span class="amount minus">- 480,00 €</span>
+                    <span class="date">26 Feb</span>
+                </div>
+            </div>
+
+        </section>
+
+        <nav class="navbar">
+            <div class="nav-link active"><i class="ph-fill ph-house"></i></div>
+            <div class="nav-link"><i class="ph ph-cards"></i></div>
+            <div class="nav-link"><i class="ph ph-arrows-left-right"></i></div>
+            <div class="nav-link"><i class="ph ph-user"></i></div>
+        </nav>
+
+    </div>
+
+</body>
+</html>
